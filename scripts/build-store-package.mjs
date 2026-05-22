@@ -1,9 +1,10 @@
 import { createHash } from "node:crypto";
 import { execFile } from "node:child_process";
 import { createRequire } from "node:module";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { cp, mkdir, mkdtemp, readFile, readdir, rm, stat, utimes, writeFile } from "node:fs/promises";
 import { promisify } from "node:util";
 
 const require = createRequire(import.meta.url);
@@ -20,6 +21,7 @@ const manifest = JSON.parse(await readFile(path.join(extensionDir, "manifest.jso
 const packageBaseName = `simple-qr-code-reader-${manifest.version}`;
 const packagePath = path.join(releaseDir, `${packageBaseName}.zip`);
 const checksumPath = path.join(releaseDir, `${packageBaseName}.sha256`);
+const normalizedPackageDate = new Date(2024, 0, 1, 0, 0, 0, 0);
 
 await mkdir(iconDir, { recursive: true });
 await mkdir(storeAssetsDir, { recursive: true });
@@ -55,19 +57,44 @@ async function generateStoreAssets() {
 
 async function packageExtension() {
   await rm(packagePath, { force: true });
-  await execFileAsync(
-    "zip",
-    [
-      "-qr",
-      packagePath,
-      ".",
-      "-x",
-      "*.DS_Store",
-      "-x",
-      "__MACOSX/*"
-    ],
-    { cwd: extensionDir }
-  );
+  const stagingRoot = await mkdtemp(path.join(tmpdir(), "simple-qr-code-reader-package-"));
+  const stagedExtensionDir = path.join(stagingRoot, "extension");
+
+  try {
+    await cp(extensionDir, stagedExtensionDir, { recursive: true });
+    await normalizeTimestamps(stagedExtensionDir);
+    await execFileAsync(
+      "zip",
+      [
+        "-X",
+        "-D",
+        "-q",
+        "-r",
+        packagePath,
+        ".",
+        "-x",
+        "*.DS_Store",
+        "-x",
+        "__MACOSX/*"
+      ],
+      { cwd: stagedExtensionDir }
+    );
+  } finally {
+    await rm(stagingRoot, { force: true, recursive: true });
+  }
+}
+
+async function normalizeTimestamps(filePath) {
+  const fileStat = await stat(filePath);
+
+  if (fileStat.isDirectory()) {
+    const entries = await readdir(filePath);
+    for (const entry of entries) {
+      await normalizeTimestamps(path.join(filePath, entry));
+    }
+  }
+
+  await utimes(filePath, normalizedPackageDate, normalizedPackageDate);
 }
 
 async function writeChecksum() {
