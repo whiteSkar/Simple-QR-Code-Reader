@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Multiple QR codes</title>
+    <style>
+      body {
+        align-items: center;
+        background: #f8f9fa;
+        color: #202124;
+        display: flex;
+        font-family: Arial, sans-serif;
+        justify-content: center;
+        margin: 0;
+        min-height: 100vh;
+      }
+
+      main {
+        display: flex;
+        gap: 72px;
+      }
+
+      section {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      h1 {
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 30px;
+        margin: 0;
+      }
+
+      .qr-frame {
+        background: #fff;
+        border: 1px solid #dadce0;
+        padding: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section>
+        <h1>google.com</h1>
+        <div class="qr-frame" id="google-qr"></div>
+      </section>
+      <section>
+        <h1>example.com</h1>
+        <div class="qr-frame" id="example-qr"></div>
+      </section>
+    </main>
+    <script src="./qr-fixtures.js"></script>
+    <script>
+      QrFixtures.renderQrCode(
+        document.getElementById("google-qr"),
+        QrFixtures.matrices.google,
+        "QR code for google.com"
+      );
+      QrFixtures.renderQrCode(
+        document.getElementById("example-qr"),
+        QrFixtures.matrices.example,
+        "QR code for example.com"
+      );
+    </script>
+  </body>
+</html>

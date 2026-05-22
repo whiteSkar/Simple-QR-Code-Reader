@@ -1,0 +1,20 @@
+{
+  "name": "simple-qr-code-reader",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Manifest V3 Chrome extension that scans visible QR codes and copies the decoded value to the clipboard.",
+  "packageManager": "npm@10",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "node scripts/build-store-package.mjs",
+    "check": "node --check extension/src/background.js && node --check extension/src/content.js && node --check extension/src/offscreen.js && node --check tests/run-tests.mjs && node --check scripts/build-store-package.mjs && node --check marketing-video/render-marketing-video.mjs",
+    "render:video": "node marketing-video/render-marketing-video.mjs",
+    "test": "node tests/run-tests.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.59.1",
+    "sharp": "0.34.5"
+  }
+}

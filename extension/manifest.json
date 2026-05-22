@@ -1,0 +1,40 @@
+{
+  "manifest_version": 3,
+  "name": "Simple QR Code Reader",
+  "description": "Scans the visible tab for QR codes, lets you choose when there are several, and copies the decoded URL to the clipboard.",
+  "version": "1.0",
+  "minimum_chrome_version": "109",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_title": "Scan visible QR code",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Alt+Shift+Q",
+        "mac": "Alt+Shift+Q"
+      },
+      "description": "Scan the visible tab for QR codes"
+    }
+  },
+  "background": {
+    "service_worker": "src/background.js"
+  },
+  "permissions": [
+    "activeTab",
+    "clipboardWrite",
+    "offscreen",
+    "scripting"
+  ]
+}

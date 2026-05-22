@@ -1,0 +1,855 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Simple QR Code Reader Promo</title>
+    <style>
+      :root {
+        --bg: #f8fafd;
+        --surface: #ffffff;
+        --ink: #202124;
+        --muted: #5f6368;
+        --blue: #1a73e8;
+        --green: #34a853;
+        --yellow: #fbbc04;
+        --line: #dfe5f2;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        background: var(--bg);
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        width: 100%;
+      }
+
+      [data-composition-id="simple-qr-code-reader-promo"] {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Avenir Next", Avenir, Arial, sans-serif;
+        height: 720px;
+        overflow: hidden;
+        position: relative;
+        width: 1280px;
+      }
+
+      .scene {
+        background: var(--bg);
+        height: 100%;
+        inset: 0;
+        overflow: hidden;
+        position: absolute;
+        width: 100%;
+      }
+
+      .scene-content {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        justify-content: center;
+        padding: 74px 94px;
+        position: relative;
+        width: 100%;
+        z-index: 2;
+      }
+
+      .scene-two .scene-content {
+        align-items: center;
+        gap: 40px;
+        justify-content: center;
+      }
+
+      .scene-three .scene-content {
+        align-items: center;
+        gap: 36px;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .halo {
+        background: radial-gradient(circle, rgba(26, 115, 232, 0.22), rgba(26, 115, 232, 0));
+        border-radius: 999px;
+        height: 420px;
+        position: absolute;
+        right: -90px;
+        top: -120px;
+        width: 420px;
+      }
+
+      .halo.green {
+        background: radial-gradient(circle, rgba(52, 168, 83, 0.18), rgba(52, 168, 83, 0));
+        bottom: -130px;
+        left: -90px;
+        right: auto;
+        top: auto;
+      }
+
+      .rule {
+        background: var(--line);
+        height: 1px;
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 140px;
+      }
+
+      .eyebrow {
+        color: var(--blue);
+        font-family: Menlo, Monaco, Consolas, monospace;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 0;
+        line-height: 28px;
+        margin: 0 0 18px;
+      }
+
+      h1,
+      h2 {
+        font-family: "Avenir Next", Avenir, Arial, sans-serif;
+        font-weight: 900;
+        letter-spacing: 0;
+        margin: 0;
+      }
+
+      h1 {
+        font-size: 82px;
+        line-height: 0.96;
+        max-width: 570px;
+      }
+
+      h2 {
+        font-size: 70px;
+        line-height: 0.98;
+        max-width: 860px;
+        text-align: center;
+      }
+
+      .copy {
+        color: var(--muted);
+        font-size: 28px;
+        font-weight: 400;
+        line-height: 38px;
+        margin: 24px 0 0;
+        max-width: 520px;
+      }
+
+      .browser {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        box-shadow: 0 28px 70px rgba(32, 33, 36, 0.14);
+        height: 430px;
+        position: absolute;
+        right: 76px;
+        top: 145px;
+        width: 520px;
+      }
+
+      .browser-bar {
+        align-items: center;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        gap: 10px;
+        height: 54px;
+        padding: 0 20px;
+      }
+
+      .dot {
+        border-radius: 999px;
+        height: 13px;
+        width: 13px;
+      }
+
+      .dot.red {
+        background: #ea4335;
+      }
+
+      .dot.yellow {
+        background: var(--yellow);
+      }
+
+      .dot.green {
+        background: var(--green);
+      }
+
+      .url-pill {
+        align-items: center;
+        background: #eef3fd;
+        border-radius: 999px;
+        color: var(--muted);
+        display: flex;
+        font-family: Menlo, Monaco, Consolas, monospace;
+        font-size: 15px;
+        height: 30px;
+        margin-left: 12px;
+        padding: 0 16px;
+        width: 320px;
+      }
+
+      .browser-body {
+        align-items: center;
+        display: flex;
+        height: 376px;
+        justify-content: center;
+        position: relative;
+      }
+
+      .qr-card {
+        align-items: center;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        padding: 22px;
+      }
+
+      .qr-card.large {
+        box-shadow: 0 10px 30px rgba(32, 33, 36, 0.08);
+      }
+
+      .qr-label {
+        color: var(--ink);
+        font-family: Menlo, Monaco, Consolas, monospace;
+        font-size: 22px;
+        font-variant-numeric: tabular-nums;
+        font-weight: 700;
+      }
+
+      .toolbar-action {
+        align-items: center;
+        background: var(--blue);
+        border-radius: 14px;
+        box-shadow: 0 16px 36px rgba(26, 115, 232, 0.28);
+        color: #fff;
+        display: flex;
+        font-family: Menlo, Monaco, Consolas, monospace;
+        font-size: 18px;
+        font-weight: 700;
+        gap: 12px;
+        height: 62px;
+        justify-content: center;
+        left: 140px;
+        padding: 0 24px;
+        position: absolute;
+        top: 536px;
+      }
+
+      .toolbar-action.pressed {
+        box-shadow: 0 8px 22px rgba(26, 115, 232, 0.32);
+      }
+
+      .scan-sweep {
+        background: linear-gradient(
+          90deg,
+          rgba(26, 115, 232, 0),
+          rgba(26, 115, 232, 0.22),
+          rgba(26, 115, 232, 0)
+        );
+        height: 100%;
+        left: -120px;
+        pointer-events: none;
+        position: absolute;
+        top: 0;
+        width: 120px;
+        z-index: 3;
+      }
+
+      .scan-frame {
+        border: 5px solid var(--blue);
+        border-radius: 12px;
+        height: 278px;
+        left: 120px;
+        opacity: 0;
+        pointer-events: none;
+        position: absolute;
+        top: 46px;
+        width: 278px;
+        z-index: 4;
+      }
+
+      .scan-frame::after {
+        background: rgba(26, 115, 232, 0.15);
+        content: "";
+        inset: 0;
+        position: absolute;
+      }
+
+      .scene-toast {
+        align-items: center;
+        background: var(--ink);
+        border-radius: 10px;
+        bottom: 34px;
+        color: #fff;
+        display: flex;
+        font-family: "Avenir Next", Avenir, Arial, sans-serif;
+        font-size: 22px;
+        font-weight: 700;
+        justify-content: center;
+        left: 50%;
+        min-height: 58px;
+        padding: 12px 22px;
+        position: absolute;
+        transform: translateX(-50%);
+        width: 500px;
+        z-index: 6;
+      }
+
+      .cursor {
+        border-left: 19px solid var(--ink);
+        border-top: 28px solid var(--ink);
+        filter: drop-shadow(0 10px 16px rgba(32, 33, 36, 0.28));
+        height: 0;
+        left: 0;
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        transform-origin: 4px 4px;
+        width: 0;
+        z-index: 8;
+      }
+
+      .cursor::after {
+        background: var(--ink);
+        content: "";
+        height: 22px;
+        left: 3px;
+        position: absolute;
+        top: -7px;
+        transform: rotate(-26deg);
+        transform-origin: top center;
+        width: 8px;
+      }
+
+      .click-ring {
+        border: 4px solid rgba(26, 115, 232, 0.45);
+        border-radius: 999px;
+        height: 74px;
+        left: 0;
+        opacity: 0;
+        pointer-events: none;
+        position: absolute;
+        top: 0;
+        width: 74px;
+        z-index: 7;
+      }
+
+      .qr-grid {
+        display: flex;
+        gap: 74px;
+      }
+
+      .choice {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .choice .qr-card {
+        position: relative;
+      }
+
+      .marker {
+        align-items: center;
+        background: rgba(26, 115, 232, 0.14);
+        border: 6px solid var(--blue);
+        border-radius: 14px;
+        display: flex;
+        height: 250px;
+        justify-content: center;
+        left: 5px;
+        position: absolute;
+        top: 5px;
+        width: 250px;
+      }
+
+      .marker span {
+        align-items: center;
+        background: var(--blue);
+        border-radius: 999px;
+        color: #fff;
+        display: flex;
+        font-family: Menlo, Monaco, Consolas, monospace;
+        font-size: 20px;
+        font-weight: 700;
+        justify-content: center;
+        min-height: 38px;
+        padding: 8px 14px;
+      }
+
+      .copy-chip {
+        align-items: center;
+        background: #eef7ef;
+        border: 1px solid #b8dfc1;
+        border-radius: 999px;
+        color: #137333;
+        display: flex;
+        font-family: Menlo, Monaco, Consolas, monospace;
+        font-size: 20px;
+        font-weight: 700;
+        height: 48px;
+        justify-content: center;
+        padding: 0 20px;
+      }
+
+      .no-code-panel {
+        align-items: center;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        box-shadow: 0 24px 70px rgba(32, 33, 36, 0.16);
+        display: grid;
+        gap: 26px;
+        grid-template-columns: 250px 1fr;
+        min-height: 330px;
+        padding: 40px;
+        text-align: left;
+        width: 780px;
+      }
+
+      .empty-browser {
+        background: #fbfcff;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        height: 230px;
+        overflow: hidden;
+        position: relative;
+        width: 250px;
+      }
+
+      .empty-browser::before {
+        background: var(--line);
+        content: "";
+        height: 1px;
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 42px;
+      }
+
+      .empty-lines {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        left: 28px;
+        position: absolute;
+        right: 28px;
+        top: 72px;
+      }
+
+      .empty-lines span {
+        background: #e7edf7;
+        border-radius: 999px;
+        display: block;
+        height: 16px;
+      }
+
+      .empty-lines span:nth-child(2) {
+        width: 70%;
+      }
+
+      .empty-lines span:nth-child(3) {
+        width: 84%;
+      }
+
+      .status-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+
+      .status-title {
+        color: var(--ink);
+        font-size: 48px;
+        font-weight: 900;
+        letter-spacing: 0;
+        line-height: 1.02;
+        margin: 0;
+      }
+
+      .status-copy {
+        color: var(--muted);
+        font-size: 24px;
+        line-height: 34px;
+        margin: 0;
+      }
+
+      .toast {
+        align-items: center;
+        background: var(--ink);
+        border-radius: 10px;
+        color: #fff;
+        display: flex;
+        font-family: "Avenir Next", Avenir, Arial, sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+        justify-content: center;
+        min-height: 62px;
+        padding: 14px 24px;
+        width: 540px;
+      }
+
+      .final-line {
+        color: var(--muted);
+        font-size: 28px;
+        line-height: 38px;
+        margin: 0;
+        max-width: 760px;
+      }
+
+      .transition {
+        background: var(--blue);
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        transform: translateX(-140%);
+        width: 100%;
+        z-index: 10;
+      }
+
+      .transition::after {
+        background: var(--green);
+        content: "";
+        height: 100%;
+        position: absolute;
+        right: -110px;
+        top: 0;
+        transform: skewX(-12deg);
+        width: 220px;
+      }
+
+      .fade {
+        background: var(--bg);
+        inset: 0;
+        opacity: 0;
+        position: absolute;
+        z-index: 20;
+      }
+
+      .anim {
+        will-change: opacity, transform;
+      }
+
+      svg.qr {
+        display: block;
+        height: 220px;
+        width: 220px;
+      }
+    </style>
+  </head>
+  <body>
+    <div data-composition-id="simple-qr-code-reader-promo" data-width="1280" data-height="720">
+      <section class="scene scene-one" id="scene-one" data-start="0" data-duration="3.72" data-track-index="0">
+        <div class="halo anim" id="s1-halo"></div>
+        <div class="halo green anim" id="s1-halo-green"></div>
+        <div class="rule anim" id="s1-rule"></div>
+        <div class="scene-content">
+          <p class="eyebrow anim" id="s1-eyebrow">ALT+SHIFT+Q</p>
+          <h1 class="anim" id="s1-title">Scan visible QR codes.</h1>
+          <p class="copy anim" id="s1-copy">Invoke once. Chrome reads the visible page and copies the decoded URL.</p>
+        </div>
+        <div class="browser anim" id="browser">
+          <div class="browser-bar">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+            <span class="url-pill">current tab</span>
+          </div>
+          <div class="browser-body">
+            <div class="scan-sweep anim" id="s1-sweep"></div>
+            <div class="scan-frame anim" id="s1-scan-frame"></div>
+            <div class="qr-card large">
+              <svg class="qr" viewBox="0 0 29 29" aria-label="QR code graphic">
+                <rect width="29" height="29" fill="#fff"></rect>
+                <g fill="#202124">
+                  <rect x="4" y="4" width="7" height="7"></rect><rect x="6" y="6" width="3" height="3" fill="#fff"></rect>
+                  <rect x="18" y="4" width="7" height="7"></rect><rect x="20" y="6" width="3" height="3" fill="#fff"></rect>
+                  <rect x="4" y="18" width="7" height="7"></rect><rect x="6" y="20" width="3" height="3" fill="#fff"></rect>
+                  <rect x="13" y="5" width="2" height="2"></rect><rect x="14" y="9" width="2" height="2"></rect>
+                  <rect x="13" y="13" width="3" height="3"></rect><rect x="18" y="14" width="2" height="2"></rect>
+                  <rect x="21" y="13" width="2" height="2"></rect><rect x="14" y="18" width="8" height="2"></rect>
+                  <rect x="13" y="22" width="2" height="2"></rect><rect x="17" y="23" width="7" height="2"></rect>
+                </g>
+              </svg>
+              <div class="qr-label">google.com</div>
+            </div>
+          </div>
+        </div>
+        <div class="toolbar-action anim" id="toolbar-action">▣ Scan QR</div>
+        <div class="cursor anim" id="s1-cursor"></div>
+        <div class="click-ring anim" id="s1-click"></div>
+        <div class="scene-toast anim" id="s1-toast">google.com is copied to clipboard</div>
+      </section>
+
+      <section class="scene scene-two" id="scene-two" data-start="3.35" data-duration="3.97" data-track-index="1">
+        <div class="halo anim" id="s2-halo"></div>
+        <div class="scene-content">
+          <h2 class="anim" id="s2-title">More than one? Pick the right one.</h2>
+          <div class="qr-grid">
+            <div class="choice anim" id="choice-one">
+              <div class="qr-card">
+                <svg class="qr" viewBox="0 0 29 29" aria-label="First QR code graphic">
+                  <rect width="29" height="29" fill="#fff"></rect>
+                  <g fill="#202124">
+                    <rect x="4" y="4" width="7" height="7"></rect><rect x="6" y="6" width="3" height="3" fill="#fff"></rect>
+                    <rect x="18" y="4" width="7" height="7"></rect><rect x="20" y="6" width="3" height="3" fill="#fff"></rect>
+                    <rect x="4" y="18" width="7" height="7"></rect><rect x="6" y="20" width="3" height="3" fill="#fff"></rect>
+                    <rect x="13" y="5" width="2" height="2"></rect><rect x="13" y="13" width="7" height="2"></rect>
+                    <rect x="17" y="17" width="3" height="3"></rect><rect x="22" y="19" width="2" height="2"></rect>
+                    <rect x="14" y="23" width="9" height="2"></rect>
+                  </g>
+                </svg>
+                <div class="marker anim" id="marker-one"><span>QR 1</span></div>
+              </div>
+              <div class="qr-label">google.com</div>
+            </div>
+            <div class="choice anim" id="choice-two">
+              <div class="qr-card">
+                <svg class="qr" viewBox="0 0 29 29" aria-label="Second QR code graphic">
+                  <rect width="29" height="29" fill="#fff"></rect>
+                  <g fill="#202124">
+                    <rect x="4" y="4" width="7" height="7"></rect><rect x="6" y="6" width="3" height="3" fill="#fff"></rect>
+                    <rect x="18" y="4" width="7" height="7"></rect><rect x="20" y="6" width="3" height="3" fill="#fff"></rect>
+                    <rect x="4" y="18" width="7" height="7"></rect><rect x="6" y="20" width="3" height="3" fill="#fff"></rect>
+                    <rect x="14" y="5" width="2" height="2"></rect><rect x="13" y="11" width="8" height="2"></rect>
+                    <rect x="15" y="15" width="3" height="3"></rect><rect x="20" y="17" width="4" height="4"></rect>
+                    <rect x="13" y="23" width="10" height="2"></rect>
+                  </g>
+                </svg>
+                <div class="marker anim" id="marker-two"><span>QR 2</span></div>
+              </div>
+              <div class="qr-label">example.com</div>
+            </div>
+          </div>
+          <div class="copy-chip anim" id="selection-chip">example.com copied</div>
+        </div>
+        <div class="scan-sweep anim" id="s2-sweep"></div>
+        <div class="cursor anim" id="s2-cursor"></div>
+        <div class="click-ring anim" id="s2-click"></div>
+      </section>
+
+      <section class="scene scene-three" id="scene-three" data-start="7.08" data-duration="3.92" data-track-index="2">
+        <div class="halo green anim" id="s3-halo-green"></div>
+        <div class="scene-content">
+          <div class="no-code-panel anim" id="no-code-panel">
+            <div class="empty-browser">
+              <div class="scan-sweep anim" id="s3-sweep"></div>
+              <div class="empty-lines">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+            <div class="status-stack">
+              <p class="status-title anim" id="s3-title">No QR codes found.</p>
+              <p class="status-copy anim" id="s3-copy">When the visible page has no codes, the extension leaves the clipboard alone.</p>
+              <div class="toast anim" id="toast">No QR codes detected on the screen</div>
+            </div>
+          </div>
+          <p class="final-line anim" id="final-line">No uploads. No account. Just visible QR scanning inside Chrome.</p>
+        </div>
+        <div class="cursor anim" id="s3-cursor"></div>
+        <div class="click-ring anim" id="s3-click"></div>
+      </section>
+
+      <div class="transition" id="transition-one"></div>
+      <div class="transition" id="transition-two"></div>
+      <div class="fade" id="fade"></div>
+    </div>
+    <script>
+      const DURATION = 11;
+      const $ = (id) => document.getElementById(id);
+      const clamp = (value, min = 0, max = 1) => Math.min(Math.max(value, min), max);
+      const easeOut = (p) => 1 - Math.pow(1 - clamp(p), 3);
+      const easeInOut = (p) => {
+        const x = clamp(p);
+        return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+      };
+      const easeBack = (p) => {
+        const x = clamp(p);
+        const c1 = 1.70158;
+        const c3 = c1 + 1;
+        return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2);
+      };
+
+      function set(el, props) {
+        if (!el) return;
+        if (props.opacity !== undefined) el.style.opacity = String(props.opacity);
+        if (props.transform !== undefined) el.style.transform = props.transform;
+        if (props.filter !== undefined) el.style.filter = props.filter;
+      }
+
+      function setClass(id, className, enabled) {
+        const el = $(id);
+        if (!el) return;
+        el.classList.toggle(className, enabled);
+      }
+
+      function enter(t, start, duration, from) {
+        const p = easeOut((t - start) / duration);
+        return {
+          opacity: p,
+          x: from.x ? from.x * (1 - p) : 0,
+          y: from.y ? from.y * (1 - p) : 0,
+          scale: from.scale ? from.scale + (1 - from.scale) * p : 1,
+          rotate: from.rotate ? from.rotate * (1 - p) : 0
+        };
+      }
+
+      function applyEnter(id, t, start, duration, from) {
+        const v = enter(t, start, duration, from);
+        set($(id), {
+          opacity: v.opacity,
+          transform: `translate(${v.x}px, ${v.y}px) scale(${v.scale}) rotate(${v.rotate}deg)`
+        });
+      }
+
+      function sceneVisibility(id, t, start, end) {
+        const visible = t >= start && t <= end;
+        set($(id), { opacity: visible ? 1 : 0, transform: "translate(0, 0)" });
+      }
+
+      function transition(id, t, start, duration) {
+        const p = (t - start) / duration;
+        let x = -140;
+        if (p >= 0 && p <= 0.5) x = -140 + 140 * easeInOut(p / 0.5);
+        if (p > 0.5 && p <= 1) x = 0 + 120 * easeInOut((p - 0.5) / 0.5);
+        if (p > 1) x = 120;
+        set($(id), { transform: `translateX(${x}%)` });
+      }
+
+      function moveCursor(id, t, start, end, from, to) {
+        const p = easeInOut((t - start) / (end - start));
+        const x = from.x + (to.x - from.x) * p;
+        const y = from.y + (to.y - from.y) * p;
+        const press = clamp((t - end) / 0.18);
+        const scale = 1 - 0.08 * Math.sin(press * Math.PI);
+        set($(id), {
+          opacity: clamp((t - (start - 0.18)) / 0.24) * (1 - clamp((t - (end + 0.72)) / 0.34)),
+          transform: `translate(${x}px, ${y}px) scale(${scale})`
+        });
+      }
+
+      function clickRing(id, t, center, clickAt) {
+        const p = clamp((t - clickAt) / 0.5);
+        const opacity = p > 0 && p < 1 ? (1 - p) * 0.9 : 0;
+        const scale = 0.62 + 0.78 * easeOut(p);
+        set($(id), {
+          opacity,
+          transform: `translate(${center.x - 37}px, ${center.y - 37}px) scale(${scale})`
+        });
+      }
+
+      function sweep(id, t, start, duration, fromX, toX) {
+        const p = easeInOut((t - start) / duration);
+        const active = t >= start && t <= start + duration;
+        const x = fromX + (toX - fromX) * p;
+        set($(id), {
+          opacity: active ? 1 : 0,
+          transform: `translateX(${x}px)`
+        });
+      }
+
+      function pulse(id, t, start, duration) {
+        const p = clamp((t - start) / duration);
+        const wave = p > 0 && p < 1 ? Math.sin(p * Math.PI) : 0;
+        set($(id), {
+          opacity: clamp((t - start + 0.12) / 0.2) * (1 - clamp((t - (start + duration - 0.2)) / 0.2)),
+          transform: `scale(${1 + wave * 0.04})`
+        });
+      }
+
+      function scalePulse(id, t, start, duration) {
+        const p = clamp((t - start) / duration);
+        const wave = p > 0 && p < 1 ? Math.sin(p * Math.PI) : 0;
+        set($(id), { transform: `scale(${1 + wave * 0.04})` });
+      }
+
+      function centeredToast(id, t, start, duration) {
+        const p = enter(t, start, duration, { x: 0, y: 24, scale: 0.96 });
+        const visible = clamp((t - (start - 0.04)) / 0.24) * (1 - clamp((t - 3.52) / 0.18));
+        set($(id), {
+          opacity: visible,
+          transform: `translate(-50%, ${p.y}px) scale(${p.scale})`
+        });
+      }
+
+      function seek(t) {
+        t = clamp(t, 0, DURATION);
+        sceneVisibility("scene-one", t, 0, 3.72);
+        sceneVisibility("scene-two", t, 3.35, 7.32);
+        sceneVisibility("scene-three", t, 7.08, DURATION);
+
+        applyEnter("s1-eyebrow", t, 0.12, 0.45, { x: -34, y: 0, scale: 1 });
+        applyEnter("s1-title", t, 0.22, 0.58, { x: -46, y: 36, scale: 0.96 });
+        applyEnter("s1-copy", t, 0.45, 0.48, { x: 0, y: 34, scale: 1 });
+        applyEnter("browser", t, 0.34, 0.62, { x: 70, y: 18, scale: 0.94, rotate: 1.6 });
+        applyEnter("toolbar-action", t, 0.92, 0.42, { x: 0, y: 42, scale: 0.88 });
+        moveCursor("s1-cursor", t, 1.22, 1.84, { x: 80, y: 675 }, { x: 178, y: 566 });
+        clickRing("s1-click", t, { x: 210, y: 566 }, 1.84);
+        setClass("toolbar-action", "pressed", t >= 1.82 && t <= 2.08);
+        const actionPress = t >= 1.82 && t <= 2.08 ? 0.96 : 1;
+        set($("toolbar-action"), {
+          opacity: $("toolbar-action").style.opacity || 1,
+          transform: `${$("toolbar-action").style.transform || "translate(0, 0)"} scale(${actionPress})`
+        });
+        sweep("s1-sweep", t, 2.06, 0.82, -95, 520);
+        pulse("s1-scan-frame", t, 2.28, 0.72);
+        centeredToast("s1-toast", t, 2.92, 0.35);
+        set($("s1-halo"), { opacity: 0.55, transform: `scale(${1 + 0.025 * Math.sin(t * 2)})` });
+        set($("s1-halo-green"), { opacity: 0.65, transform: `scale(${1 + 0.018 * Math.cos(t * 2)})` });
+        set($("s1-rule"), { opacity: easeOut(t / 0.7), transform: `scaleX(${easeOut(t / 0.7)})` });
+
+        applyEnter("s2-title", t, 3.74, 0.52, { x: 0, y: 42, scale: 0.96 });
+        applyEnter("choice-one", t, 4.02, 0.55, { x: -70, y: 16, scale: 0.92, rotate: -1.8 });
+        const choiceTwo = enter(t, 4.15, 0.55, { x: 70, y: 16, scale: 0.92, rotate: 1.8 });
+        set($("choice-two"), {
+          opacity: choiceTwo.opacity,
+          transform: `translate(${choiceTwo.x}px, ${choiceTwo.y}px) scale(${choiceTwo.scale}) rotate(${choiceTwo.rotate}deg)`
+        });
+        sweep("s2-sweep", t, 4.58, 0.72, -140, 1320);
+        applyEnter("marker-one", t, 5.18, 0.28, { x: 0, y: 0, scale: 0.84 });
+        applyEnter("marker-two", t, 5.28, 0.28, { x: 0, y: 0, scale: 0.84 });
+        const markerFade = 1 - clamp((t - 6.36) / 0.24);
+        set($("marker-one"), { opacity: Number($("marker-one").style.opacity || 0) * markerFade });
+        set($("marker-two"), { opacity: Number($("marker-two").style.opacity || 0) * markerFade });
+        moveCursor("s2-cursor", t, 5.46, 6.08, { x: 592, y: 648 }, { x: 775, y: 396 });
+        clickRing("s2-click", t, { x: 804, y: 398 }, 6.08);
+        if (t >= 6.08) scalePulse("choice-two", t, 6.08, 0.54);
+        applyEnter("selection-chip", t, 6.32, 0.34, { x: 0, y: 20, scale: 0.96 });
+        set($("selection-chip"), { opacity: clamp((t - 6.28) / 0.18) * (1 - clamp((t - 6.94) / 0.22)) });
+        set($("s2-halo"), { opacity: 0.45, transform: `scale(${1 + 0.02 * Math.sin(t * 1.7)})` });
+
+        const clip = enter(t, 7.48, 0.55, { x: 0, y: 42, scale: 0.94 });
+        set($("no-code-panel"), {
+          opacity: clip.opacity,
+          transform: `translate(${clip.x}px, ${clip.y}px) scale(${clip.scale})`
+        });
+        applyEnter("s3-title", t, 7.78, 0.38, { x: 0, y: 24, scale: 1 });
+        applyEnter("s3-copy", t, 7.94, 0.38, { x: 0, y: 24, scale: 1 });
+        moveCursor("s3-cursor", t, 8.12, 8.74, { x: 1080, y: 650 }, { x: 390, y: 286 });
+        clickRing("s3-click", t, { x: 420, y: 288 }, 8.74);
+        sweep("s3-sweep", t, 8.92, 0.7, -95, 260);
+        applyEnter("toast", t, 9.74, 0.4, { x: 0, y: 28, scale: 0.96 });
+        set($("toast"), { opacity: clamp((t - 9.72) / 0.22) * (1 - clamp((t - 10.44) / 0.24)) });
+        applyEnter("final-line", t, 10.08, 0.42, { x: 0, y: 24, scale: 1 });
+        set($("s3-halo-green"), { opacity: 0.7, transform: `scale(${1 + 0.02 * Math.cos(t * 1.8)})` });
+
+        transition("transition-one", t, 3.28, 0.54);
+        transition("transition-two", t, 6.94, 0.54);
+        set($("fade"), { opacity: easeInOut((t - 10.58) / 0.42) });
+      }
+
+      window.__marketingRender = { duration: DURATION, seek };
+      seek(0);
+    </script>
+  </body>
+</html>
