@@ -1,16 +1,38 @@
 # Simple QR Code Reader
 
-A Manifest V3 Chrome extension that scans the visible area of the active tab for QR codes and copies the decoded URL text to the clipboard.
+Simple QR Code Reader is a Manifest V3 Chrome extension that scans the visible area of the active tab for QR codes and copies the decoded value to the clipboard.
+
+The extension is designed for the common case where a QR code appears on a web page and you want the underlying URL without using a phone camera.
+
+## What It Does
+
+- Scans only when you invoke the extension from the toolbar action or the `Alt+Shift+Q` shortcut.
+- Copies the decoded QR value to the clipboard when exactly one visible QR code is detected.
+- Marks each detected QR code when more than one is visible, then copies the one you select.
+- Shows one shared toast UI for copy success and no-code messages.
+- Automatically removes messages after 2 seconds.
+- Processes screenshots locally in the browser. It does not send screenshots, QR values, clipboard contents, or browsing data to a server.
+
+## How It Works
+
+Chrome's `activeTab` permission lets the extension capture the visible area of the current tab only after you invoke it. The background service worker sends that screenshot to an offscreen document for QR decoding. The content script handles page overlays, QR selection markers, and toast messages.
+
+The extension requests these permissions:
+
+- `activeTab`: capture the current visible tab after explicit user invocation.
+- `scripting`: inject the content script that displays markers and messages.
+- `clipboardWrite`: copy the decoded QR value to the clipboard.
+- `offscreen`: run Manifest V3-compatible QR decoding and clipboard work in a hidden document.
 
 ## Requirements
 
 - Node.js 20 or newer.
 - npm for installing development dependencies in a normal standalone setup.
 - Google Chrome for the end-to-end test harness.
-- `zip` for packaging.
-- `ffmpeg` only if rendering the marketing video.
+- `zip` for packaging the Chrome Web Store upload ZIP.
+- `ffmpeg` only if rendering the optional marketing video.
 
-For a normal standalone setup, install dependencies with:
+Install dependencies:
 
 ```sh
 npm install
@@ -23,28 +45,34 @@ export NODE_BIN="/absolute/path/to/node"
 export NODE_PATH="/absolute/path/to/node_modules"
 ```
 
-## Behavior
+## Development
 
-- Invoke the extension from the toolbar action or the `Alt+Shift+Q` command.
-- If one QR code is visible, its decoded value is copied immediately.
-- If more than one QR code is visible, each detected code is marked on the page. Select one marker to copy that code and clear the markers.
-- If no QR codes are visible, a shared toast says `No QR codes detected on the screen.`
-- Copy and no-code messages use the same toast UI and disappear after 2 seconds.
+Load the extension locally from Chrome:
 
-## Test Fixtures
+1. Open `chrome://extensions`.
+2. Enable Developer mode.
+3. Select Load unpacked.
+4. Choose the `extension/` directory.
 
-The automated tests serve these local pages:
+Run syntax checks:
+
+```sh
+npm run check
+```
+
+Run the end-to-end test suite:
+
+```sh
+npm test
+```
+
+The automated tests serve three local fixture pages:
 
 - `tests/fixtures/single.html`: one QR code containing `google.com`.
 - `tests/fixtures/multiple.html`: two visible QR codes containing `google.com` and `example.com`.
 - `tests/fixtures/empty.html`: no QR codes.
 
-Run the tests with:
-
-```sh
-npm run check
-npm test
-```
+The test harness launches Chrome with the unpacked extension and uses the extension service worker when Chrome exposes it to Playwright. If the service worker is unavailable, the harness prints a warning and injects the content script into fixture pages so QR detection, marker, clipboard, and toast behavior are still validated. Use `REQUIRE_EXTENSION_WORKER=1 npm test` when the run should fail unless the service worker path is available.
 
 Codex desktop fallback:
 
@@ -59,11 +87,9 @@ node --check extension/src/background.js \
 NODE_BIN="$NODE_BIN" NODE_PATH="$NODE_PATH" bash run-tests.sh
 ```
 
-The test harness launches Chrome with this unpacked extension and uses the extension service worker when Chrome exposes it to Playwright. If the service worker is unavailable, the harness prints a warning and injects the content script into fixture pages so QR detection, marker, clipboard, and toast behavior are still validated. Use `REQUIRE_EXTENSION_WORKER=1 npm test` when you specifically need the run to fail unless the service worker path is available.
+## Packaging
 
-## Chrome Web Store Package
-
-Build the upload ZIP and listing images with:
+Build the Chrome Web Store upload ZIP:
 
 ```sh
 npm run build
@@ -75,9 +101,16 @@ Codex desktop fallback:
 NODE_BIN="$NODE_BIN" NODE_PATH="$NODE_PATH" bash build-store-package.sh
 ```
 
-Upload `release/simple-qr-code-reader-1.0.zip` in the Chrome Web Store Developer Dashboard. Store listing copy, permission justifications, test instructions, and the privacy-policy draft are in `PUBLISHING.md` and `PRIVACY.md`.
+The build writes:
 
-Render the short marketing video with:
+- `release/simple-qr-code-reader-1.0.zip`
+- `release/simple-qr-code-reader-1.0.sha256`
+
+The package script includes only extension files from `extension/`, strips extra ZIP metadata, normalizes timestamps, and writes a SHA-256 checksum.
+
+## Optional Marketing Video
+
+Render the short marketing video:
 
 ```sh
 npm run render:video
@@ -91,11 +124,17 @@ NODE_BIN="$NODE_BIN" NODE_PATH="$NODE_PATH" bash render-marketing-video.sh
 
 The rendered MP4 is written to `marketing-video/renders/simple-qr-code-reader-promo-1.0.mp4`.
 
+## Project Structure
+
+- `extension/`: Chrome extension source, manifest, icons, and offscreen document.
+- `extension/src/background.js`: invocation, screenshot capture, QR decoding coordination, and clipboard flow.
+- `extension/src/content.js`: page overlays, QR markers, and toast UI.
+- `extension/src/offscreen.js`: local QR decoding and clipboard write support.
+- `tests/`: fixture pages and Playwright-based end-to-end validation.
+- `scripts/`: release packaging script.
+- `marketing-video/`: optional HyperFrames marketing video source.
+- `PRIVACY.md`: privacy policy for the extension.
+
 ## Generated Artifacts
 
-`release/`, `store-assets/`, and `marketing-video/renders/` are generated outputs. They are ignored by git and can be regenerated with the commands above. Store listing assets are written to:
-
-- `store-assets/store-icon-128x128.png`
-- `store-assets/small-promo-440x280.png`
-- `store-assets/marquee-promo-1400x560.png`
-- `store-assets/screenshot-multi-select-1280x800.png`
+`release/`, `store-assets/`, and `marketing-video/renders/` are ignored local outputs. They are generated or maintained for packaging and store submission work and are not required for the extension source to function.

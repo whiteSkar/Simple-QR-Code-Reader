@@ -14,7 +14,6 @@
     "test": "node tests/run-tests.mjs"
   },
   "devDependencies": {
-    "playwright": "1.59.1",
-    "sharp": "0.34.5"
+    "playwright": "1.59.1"
   }
 }
