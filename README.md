@@ -93,4 +93,9 @@ The rendered MP4 is written to `marketing-video/renders/simple-qr-code-reader-pr
 
 ## Generated Artifacts
 
-`release/`, `store-assets/`, and `marketing-video/renders/` are generated outputs. They are ignored by git and can be regenerated with the commands above.
+`release/`, `store-assets/`, and `marketing-video/renders/` are generated outputs. They are ignored by git and can be regenerated with the commands above. Store listing assets are written to:
+
+- `store-assets/store-icon-128x128.png`
+- `store-assets/small-promo-440x280.png`
+- `store-assets/marquee-promo-1400x560.png`
+- `store-assets/screenshot-multi-select-1280x800.png`

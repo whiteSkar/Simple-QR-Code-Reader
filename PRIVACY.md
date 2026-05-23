@@ -1,6 +1,4 @@
-# Privacy Policy Draft
-
-Effective date: [replace with publication date]
+# Privacy Policy
 
 Simple QR Code Reader scans QR codes in the visible area of the active Chrome tab when you invoke the extension.
 
@@ -23,7 +21,3 @@ No user data is shared with the developer, third parties, advertisers, analytics
 ## Data Retention
 
 The extension does not retain screenshots, decoded QR values, browsing history, or clipboard contents.
-
-## Contact
-
-Contact: [replace with support email or support URL]

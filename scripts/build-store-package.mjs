@@ -46,9 +46,18 @@ async function generateExtensionIcons() {
 }
 
 async function generateStoreAssets() {
+  await cp(
+    path.join(iconDir, "icon128.png"),
+    path.join(storeAssetsDir, "store-icon-128x128.png")
+  );
+
   await sharp(Buffer.from(promoSvg()))
     .png()
     .toFile(path.join(storeAssetsDir, "small-promo-440x280.png"));
+
+  await sharp(Buffer.from(marqueePromoSvg()))
+    .png()
+    .toFile(path.join(storeAssetsDir, "marquee-promo-1400x560.png"));
 
   await sharp(Buffer.from(screenshotSvg()))
     .png()
@@ -156,6 +165,50 @@ function promoSvg() {
   <text x="232" y="129" fill="#202124" font-family="Arial, sans-serif" font-size="27" font-weight="700">Code Reader</text>
   <text x="232" y="166" fill="#5f6368" font-family="Arial, sans-serif" font-size="15">Scan visible QR codes</text>
   <text x="232" y="190" fill="#5f6368" font-family="Arial, sans-serif" font-size="15">and copy the URL.</text>
+</svg>`;
+}
+
+function marqueePromoSvg() {
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="560" viewBox="0 0 1400 560">
+  <rect width="1400" height="560" fill="#f8fafd"/>
+  <rect x="64" y="64" width="1272" height="432" rx="24" fill="#fff" stroke="#dfe5f2"/>
+  <g transform="translate(116 104)">
+    <rect x="0" y="0" width="168" height="168" rx="28" fill="#1a73e8"/>
+    <rect x="24" y="24" width="120" height="120" rx="18" fill="#fff"/>
+    <rect x="40" y="40" width="30" height="30" rx="4" fill="#202124"/>
+    <rect x="98" y="40" width="30" height="30" rx="4" fill="#202124"/>
+    <rect x="40" y="98" width="30" height="30" rx="4" fill="#202124"/>
+    <rect x="82" y="82" width="16" height="16" fill="#202124"/>
+    <rect x="104" y="88" width="16" height="16" fill="#202124"/>
+    <rect x="82" y="110" width="42" height="16" fill="#202124"/>
+    <path d="M188 92h56V68l58 50-58 50v-24h-56z" fill="#34a853"/>
+  </g>
+  <g transform="translate(116 314)">
+    <text x="0" y="0" fill="#202124" font-family="Arial, sans-serif" font-size="52" font-weight="700">Simple QR Code Reader</text>
+    <text x="0" y="58" fill="#5f6368" font-family="Arial, sans-serif" font-size="26">Scan visible QR codes and copy the decoded URL.</text>
+  </g>
+  <g transform="translate(820 104)">
+    <rect x="0" y="0" width="404" height="300" rx="18" fill="#fbfcff" stroke="#dfe5f2"/>
+    <rect x="0" y="0" width="404" height="52" rx="18" fill="#fff" stroke="#dfe5f2"/>
+    <circle cx="32" cy="26" r="7" fill="#ea4335"/>
+    <circle cx="56" cy="26" r="7" fill="#fbbc04"/>
+    <circle cx="80" cy="26" r="7" fill="#34a853"/>
+    <rect x="118" y="15" width="210" height="22" rx="11" fill="#eef3fd"/>
+    <text x="138" y="31" fill="#5f6368" font-family="Menlo, Monaco, Consolas, monospace" font-size="13">current tab</text>
+    <rect x="78" y="92" width="148" height="148" fill="#fff" stroke="#dadce0"/>
+    <rect x="92" y="106" width="36" height="36" fill="#202124"/>
+    <rect x="176" y="106" width="36" height="36" fill="#202124"/>
+    <rect x="92" y="190" width="36" height="36" fill="#202124"/>
+    <rect x="148" y="160" width="20" height="20" fill="#202124"/>
+    <rect x="176" y="166" width="20" height="20" fill="#202124"/>
+    <rect x="146" y="202" width="54" height="18" fill="#202124"/>
+    <rect x="66" y="80" width="172" height="172" rx="12" fill="rgba(26,115,232,0.14)" stroke="#1a73e8" stroke-width="6"/>
+    <rect x="130" y="148" width="72" height="34" rx="17" fill="#1a73e8"/>
+    <text x="166" y="171" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-size="16" font-weight="700">QR 1</text>
+    <rect x="176" y="254" width="254" height="54" rx="10" fill="#202124"/>
+    <text x="303" y="289" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-size="18" font-weight="700">google.com copied</text>
+  </g>
 </svg>`;
 }
 

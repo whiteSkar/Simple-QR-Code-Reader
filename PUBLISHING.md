@@ -50,11 +50,13 @@ English
 
 Generated assets:
 
+- `store-assets/store-icon-128x128.png`
 - `store-assets/small-promo-440x280.png`
+- `store-assets/marquee-promo-1400x560.png`
 - `store-assets/screenshot-multi-select-1280x800.png`
 - `marketing-video/renders/simple-qr-code-reader-promo-1.0.mp4`
 
-The extension icon used by Chrome and the Web Store is bundled inside the extension ZIP at `icons/icon128.png`.
+The store icon is also bundled inside the extension ZIP at `icons/icon128.png`; `store-assets/store-icon-128x128.png` is a convenience copy for the dashboard upload field.
 
 ## Privacy Tab
 
@@ -124,7 +126,9 @@ Local test pages are included outside the store package in `tests/fixtures`.
 - Run `npm test`.
 - Run `npm run build`.
 - Upload `release/simple-qr-code-reader-1.0.zip`.
+- Upload `store-assets/store-icon-128x128.png`.
 - Upload `store-assets/small-promo-440x280.png`.
+- Upload `store-assets/marquee-promo-1400x560.png`.
 - Upload `store-assets/screenshot-multi-select-1280x800.png`.
 - Use `marketing-video/renders/simple-qr-code-reader-promo-1.0.mp4` as the short marketing video asset wherever you host launch or support media.
 - Add a public privacy policy URL. A draft is in `PRIVACY.md`; publish it on a website you control before submitting.
