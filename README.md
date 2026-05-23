@@ -8,4 +8,6 @@ The extension runs locally in the browser and is intended for quickly extracting
 
 ## Demo
 
-https://github.com/whiteSkar/Simple-QR-Code-Reader/raw/main/demo/simple-qr-code-reader-demo.mp4
+https://github.com/user-attachments/assets/4dd8adda-daec-4257-98e8-c4ef258e9235
+
+
