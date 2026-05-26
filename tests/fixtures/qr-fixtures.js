@@ -86,8 +86,36 @@
     target.replaceChildren(svg);
   }
 
+  function drawQrCode(context, matrix, options = {}) {
+    const quietZone = options.quietZone || 4;
+    const moduleSize = options.moduleSize || 4;
+    const left = options.left || 0;
+    const top = options.top || 0;
+    const modules = matrix.length + quietZone * 2;
+
+    context.fillStyle = "#fff";
+    context.fillRect(left, top, modules * moduleSize, modules * moduleSize);
+    context.fillStyle = "#000";
+
+    matrix.forEach((row, rowIndex) => {
+      [...row].forEach((cell, columnIndex) => {
+        if (cell !== "1") {
+          return;
+        }
+
+        context.fillRect(
+          left + (columnIndex + quietZone) * moduleSize,
+          top + (rowIndex + quietZone) * moduleSize,
+          moduleSize,
+          moduleSize
+        );
+      });
+    });
+  }
+
   window.QrFixtures = {
     matrices,
+    drawQrCode,
     renderQrCode
   };
 })();

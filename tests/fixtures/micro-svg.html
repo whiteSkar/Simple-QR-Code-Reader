@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Micro SVG QR code</title>
+    <style>
+      body {
+        align-items: center;
+        background: #f8f9fa;
+        display: flex;
+        justify-content: center;
+        margin: 0;
+        min-height: 100vh;
+      }
+
+      .qr-frame {
+        background: #fff;
+        border-radius: 4px;
+        padding: 3px;
+      }
+
+      .qr-frame svg {
+        display: block;
+        height: auto;
+        width: 26px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="qr-frame" id="micro-qr"></div>
+    <script src="./qr-fixtures.js"></script>
+    <script>
+      QrFixtures.renderQrCode(
+        document.getElementById("micro-qr"),
+        QrFixtures.matrices.google,
+        "QR code for google.com"
+      );
+    </script>
+  </body>
+</html>

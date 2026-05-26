@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Barcode with QR thumbnail</title>
+    <style>
+      body {
+        align-items: center;
+        background: #f8f9fa;
+        display: flex;
+        justify-content: center;
+        margin: 0;
+        min-height: 100vh;
+      }
+
+      canvas {
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 1px 12px rgba(60, 64, 67, 0.18);
+        display: block;
+        height: 148px;
+        width: 312px;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas
+      id="barcode-qr-thumbnail"
+      width="312"
+      height="148"
+      data-qr-left="218"
+      data-qr-top="34"
+      data-qr-size="58"
+    ></canvas>
+    <script src="./qr-fixtures.js"></script>
+    <script>
+      const canvas = document.getElementById("barcode-qr-thumbnail");
+      const context = canvas.getContext("2d", { alpha: false });
+      context.fillStyle = "#fff";
+      context.fillRect(0, 0, canvas.width, canvas.height);
+
+      context.fillStyle = "#000";
+      const bars = [2, 1, 5, 1, 3, 2, 1, 4, 1, 2, 3, 1, 5, 1, 2, 4, 1, 2, 3, 1, 5, 1];
+      let x = 30;
+      for (const width of bars) {
+        context.fillRect(x, 38, width, 64);
+        x += width + 5;
+      }
+
+      context.fillStyle = "#202124";
+      context.font = "17px Arial";
+      context.fillText("0 36000 29145 2", 42, 122);
+      QrFixtures.drawQrCode(context, QrFixtures.matrices.google, {
+        left: 218,
+        top: 34,
+        moduleSize: 2
+      });
+      context.font = "14px Arial";
+      context.fillText("QR Code", 222, 122);
+    </script>
+  </body>
+</html>

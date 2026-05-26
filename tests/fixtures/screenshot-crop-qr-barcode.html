@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Screenshot crop QR and barcode</title>
+    <style>
+      body {
+        align-items: center;
+        background: #f8f9fa;
+        display: flex;
+        justify-content: center;
+        margin: 0;
+        min-height: 100vh;
+      }
+
+      canvas {
+        background: #fff;
+        display: block;
+        height: 250px;
+        width: 300px;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas
+      id="screenshot-crop-qr-barcode"
+      width="300"
+      height="250"
+      data-qr-left="24"
+      data-qr-top="72"
+      data-qr-size="87"
+    ></canvas>
+    <script src="./qr-fixtures.js"></script>
+    <script>
+      const canvas = document.getElementById("screenshot-crop-qr-barcode");
+      const context = canvas.getContext("2d", { alpha: false });
+      context.fillStyle = "#fff";
+      context.fillRect(0, 0, canvas.width, canvas.height);
+
+      context.strokeStyle = "#000";
+      context.lineWidth = 5;
+      context.beginPath();
+      context.roundRect(24, 20, 268, 174, 6);
+      context.stroke();
+
+      context.lineWidth = 3;
+      context.beginPath();
+      context.moveTo(112, 20);
+      context.lineTo(112, 194);
+      context.stroke();
+
+      QrFixtures.drawQrCode(context, QrFixtures.matrices.google, {
+        left: 24,
+        top: 72,
+        moduleSize: 3
+      });
+
+      context.fillStyle = "#000";
+      const bars = [3, 2, 1, 5, 1, 3, 2, 1, 4, 2, 1, 5, 2, 3, 1, 4, 1, 2, 5, 1, 3, 2];
+      let x = 140;
+      for (const width of bars) {
+        context.fillRect(x, 72, width, 58);
+        x += width + 4;
+      }
+
+      context.fillStyle = "#202124";
+      context.font = "16px Arial";
+      context.fillText("0 1 2 3 4 5 6 7 8 9", 132, 142);
+      context.font = "13px Arial";
+      context.fillText("Tourmaline Enterprises", 32, 220);
+      context.fillText("QR Codes vs. Barcodes: Which One Is ...", 30, 240);
+    </script>
+  </body>
+</html>

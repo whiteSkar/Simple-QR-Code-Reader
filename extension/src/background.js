@@ -16,14 +16,18 @@ chrome.action.onClicked.addListener((tab) => {
 });
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-  if (!message || message.type !== MESSAGE.copyText) {
+  if (!message || !message.type) {
     return false;
   }
 
-  writeToClipboard(message.text)
-    .then(() => sendResponse({ ok: true }))
-    .catch((error) => sendResponse({ ok: false, error: error.message }));
-  return true;
+  if (message.type === MESSAGE.copyText) {
+    writeToClipboard(message.text)
+      .then(() => sendResponse({ ok: true }))
+      .catch((error) => sendResponse({ ok: false, error: error.message }));
+    return true;
+  }
+
+  return false;
 });
 
 async function scanActiveTab(tab) {

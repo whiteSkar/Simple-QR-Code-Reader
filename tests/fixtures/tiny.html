@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tiny QR code</title>
+    <style>
+      body {
+        align-items: center;
+        background: #f8f9fa;
+        color: #202124;
+        display: flex;
+        font-family: Arial, sans-serif;
+        justify-content: center;
+        margin: 0;
+        min-height: 100vh;
+      }
+
+      .qr-frame {
+        background: #fff;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(60, 64, 67, 0.18);
+        padding: 4px;
+      }
+
+      .qr-frame svg {
+        display: block;
+        height: auto;
+        width: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="qr-frame" id="tiny-qr"></div>
+    <script src="./qr-fixtures.js"></script>
+    <script>
+      QrFixtures.renderQrCode(
+        document.getElementById("tiny-qr"),
+        QrFixtures.matrices.google,
+        "QR code for google.com"
+      );
+    </script>
+  </body>
+</html>

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>QR next to barcode</title>
+    <style>
+      body {
+        align-items: center;
+        background: #f8f9fa;
+        display: flex;
+        justify-content: center;
+        margin: 0;
+        min-height: 100vh;
+      }
+
+      canvas {
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 14px rgba(60, 64, 67, 0.22);
+        display: block;
+        height: 168px;
+        width: 272px;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas
+      id="qr-barcode-card"
+      width="272"
+      height="168"
+      data-qr-left="16"
+      data-qr-top="46"
+      data-qr-size="87"
+    ></canvas>
+    <script src="./qr-fixtures.js"></script>
+    <script>
+      const canvas = document.getElementById("qr-barcode-card");
+      const context = canvas.getContext("2d", { alpha: false });
+      context.fillStyle = "#fff";
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      context.strokeStyle = "#111";
+      context.lineWidth = 4;
+      context.strokeRect(2, 2, canvas.width - 4, canvas.height - 4);
+
+      context.strokeStyle = "#111";
+      context.lineWidth = 2;
+      context.beginPath();
+      context.moveTo(116, 3);
+      context.lineTo(116, canvas.height - 3);
+      context.stroke();
+
+      QrFixtures.drawQrCode(context, QrFixtures.matrices.google, {
+        left: 16,
+        top: 46,
+        moduleSize: 3
+      });
+
+      context.fillStyle = "#000";
+      const bars = [3, 1, 2, 1, 4, 2, 1, 3, 1, 2, 4, 1, 2, 3, 1, 1, 4, 2, 1, 3];
+      let x = 146;
+      for (const width of bars) {
+        context.fillRect(x, 58, width, 72);
+        x += width + 4;
+      }
+
+      context.fillStyle = "#202124";
+      context.font = "18px Arial";
+      context.fillText("0 1 2 3 4 5 6 7 8", 144, 148);
+    </script>
+  </body>
+</html>

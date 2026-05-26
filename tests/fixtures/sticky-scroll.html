@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sticky QR code</title>
+    <style>
+      body {
+        background: #f8f9fa;
+        color: #202124;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        min-height: 1400px;
+      }
+
+      .sticky-strip {
+        align-items: center;
+        background: #fff;
+        border-bottom: 1px solid #dadce0;
+        display: flex;
+        gap: 16px;
+        height: 86px;
+        padding: 0 24px;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+      }
+
+      .qr-frame {
+        background: #fff;
+        border: 1px solid #dadce0;
+        padding: 4px;
+      }
+
+      .qr-frame svg {
+        display: block;
+        height: auto;
+        width: 64px;
+      }
+
+      main {
+        display: grid;
+        gap: 24px;
+        padding: 80px 24px 900px;
+      }
+
+      .block {
+        background: #fff;
+        border: 1px solid #dadce0;
+        border-radius: 8px;
+        height: 180px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="sticky-strip">
+      <div class="qr-frame" id="sticky-qr"></div>
+      <strong>Sticky google.com QR code</strong>
+    </div>
+    <main>
+      <div class="block"></div>
+      <div class="block"></div>
+      <div class="block"></div>
+      <div class="block"></div>
+    </main>
+    <script src="./qr-fixtures.js"></script>
+    <script>
+      QrFixtures.renderQrCode(
+        document.getElementById("sticky-qr"),
+        QrFixtures.matrices.google,
+        "QR code for google.com"
+      );
+    </script>
+  </body>
+</html>

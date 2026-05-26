@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Google Images-like QR screenshot grid</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+      }
+
+      body {
+        background: #fff;
+        font-family: Arial, sans-serif;
+      }
+
+      canvas {
+        display: block;
+        height: 438px;
+        width: 2048px;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="google-images-screenshot-grid" width="2048" height="438"></canvas>
+    <script src="./qr-fixtures.js"></script>
+    <script>
+      const canvas = document.getElementById("google-images-screenshot-grid");
+      const context = canvas.getContext("2d", { alpha: false });
+      const expectedQrBounds = [];
+      let qrIndex = 0;
+
+      context.fillStyle = "#fff";
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      drawToolbar();
+
+      drawTile({ x: 16, y: 74, w: 130, h: 138, title: "QR code - Wikipedia", qr: { x: 24, y: 87, moduleSize: 4 } });
+      drawTile({ x: 164, y: 74, w: 208, h: 138, title: "How Do QR Codes Work?", qr: { x: 218, y: 97, moduleSize: 3 } });
+      drawTile({ x: 388, y: 74, w: 132, h: 138, title: "QR code - Wikipedia", qr: { x: 400, y: 88, moduleSize: 4 } });
+      drawTile({ x: 536, y: 74, w: 220, h: 138, title: "What is QR code definition", qr: { x: 618, y: 122, moduleSize: 2 } });
+      drawTile({ x: 776, y: 74, w: 132, h: 138, title: "What is a QR Code", badge: true, qr: { x: 814, y: 86, moduleSize: 2 } });
+      drawTile({ x: 924, y: 74, w: 216, h: 138, title: "QR Code vs Barcode", barcode: { x: 946, y: 119 }, qr: { x: 1078, y: 113, moduleSize: 2 } });
+      drawTile({ x: 1154, y: 74, w: 136, h: 138, title: "QR Code Creator", qr: { x: 1158, y: 82, moduleSize: 4 } });
+      drawTile({ x: 1306, y: 74, w: 132, h: 138, title: "How to create QR", qr: { x: 1315, y: 88, moduleSize: 4 } });
+      drawTile({ x: 1456, y: 74, w: 212, h: 138, title: "Create QR Code", chrome: true, qr: { x: 1588, y: 95, moduleSize: 3 } });
+      drawTile({ x: 1682, y: 74, w: 132, h: 138, title: "QR code - Wikipedia", logo: true, qr: { x: 1692, y: 85, moduleSize: 4 } });
+      drawTile({ x: 1830, y: 74, w: 216, h: 138, title: "Do QR codes expire?", photo: true, qr: { x: 1874, y: 116, moduleSize: 2 } });
+
+      drawTile({ x: 16, y: 206, w: 174, h: 142, title: "Free QR Code Generator", phone: true, qr: { x: 77, y: 242, moduleSize: 2 } });
+      drawTile({ x: 204, y: 206, w: 134, h: 142, title: "What is a QR Code?", qr: { x: 225, y: 253, moduleSize: 3 } });
+      drawTile({ x: 354, y: 206, w: 210, h: 142, title: "QR Codes vs. Barcodes", card: true, barcode: { x: 432, y: 270 }, qr: { x: 356, y: 252, moduleSize: 2 } });
+      drawTile({ x: 580, y: 206, w: 132, h: 142, title: "How to Use QR Codes", smallLogo: true, qr: { x: 613, y: 244, moduleSize: 2 } });
+      drawTile({ x: 728, y: 206, w: 134, h: 142, title: "Custom QR Code Design", multi: true });
+      drawTile({ x: 878, y: 206, w: 216, h: 142, title: "Use QR Codes in Higher Education", education: true });
+      drawTile({ x: 1110, y: 206, w: 112, h: 142, title: "QR Codes for Kids", qr: { x: 1120, y: 253, moduleSize: 3 } });
+      drawTile({ x: 1242, y: 206, w: 174, h: 142, title: "How to Scan a QR Code", paper: true, qr: { x: 1292, y: 240, moduleSize: 3 } });
+      drawTile({ x: 1428, y: 206, w: 228, h: 142, title: "QR Codes: a complex past", wall: true });
+      drawTile({ x: 1670, y: 206, w: 130, h: 142, title: "How Do QR Codes Work", green: true, qr: { x: 1696, y: 252, moduleSize: 3 } });
+      drawTile({ x: 1818, y: 206, w: 226, h: 142, title: "How QR Codes Work", barcode: { x: 1902, y: 263 }, qr: { x: 1838, y: 243, moduleSize: 2 } });
+
+      window.expectedQrBounds = expectedQrBounds;
+
+      function drawToolbar() {
+        context.fillStyle = "#fff";
+        context.fillRect(0, 0, canvas.width, 70);
+        context.strokeStyle = "#e0e0e0";
+        context.beginPath();
+        context.moveTo(0, 68);
+        context.lineTo(canvas.width, 68);
+        context.stroke();
+        const chips = ["Scan", "Sample", "Barcode", "Logo", "Pokemon", "Transparent", "Design", "Generator", "Mii", "Tomodachi life", "Icon", "Google", "Camera", "Payment", "Iphone", "Background", "Mobile", "Android"];
+        let x = 16;
+        for (const chip of chips) {
+          context.fillStyle = "#fff";
+          context.strokeStyle = "#dadce0";
+          roundRect(x, 16, Math.max(78, chip.length * 8 + 36), 38, 6, true, true);
+          context.fillStyle = "#202124";
+          context.font = "12px Arial";
+          context.fillText(chip, x + 34, 39);
+          x += Math.max(84, chip.length * 8 + 42);
+        }
+      }
+
+      function drawTile(options) {
+        context.fillStyle = "#fff";
+        roundRect(options.x, options.y, options.w, options.h, 8, true, false);
+        context.fillStyle = "#f8f9fa";
+        roundRect(options.x, options.y, options.w, options.h - 34, 8, true, false);
+
+        if (options.card) {
+          context.strokeStyle = "#000";
+          context.lineWidth = 4;
+          roundRect(options.x + 2, options.y + 2, options.w - 4, options.h - 48, 5, false, true);
+          context.lineWidth = 3;
+          line(options.x + 66, options.y + 3, options.x + 66, options.y + options.h - 49);
+        }
+
+        if (options.badge) {
+          context.strokeStyle = "#86a8dc";
+          context.lineWidth = 4;
+          circle(options.x + 66, options.y + 62, 62, false, true);
+          context.fillStyle = "#d9e7ff";
+          circle(options.x + 66, options.y + 62, 56, true, false);
+        }
+
+        if (options.chrome) {
+          context.fillStyle = "#4285f4";
+          circle(options.x + 42, options.y + 54, 34, true, false);
+          context.fillStyle = "#fbbc04";
+          circle(options.x + 58, options.y + 68, 30, true, false);
+          context.fillStyle = "#34a853";
+          circle(options.x + 30, options.y + 70, 30, true, false);
+          context.fillStyle = "#ea4335";
+          context.font = "700 30px Arial";
+          context.fillText("FREE!", options.x + 72, options.y + 94);
+        }
+
+        if (options.phone) {
+          context.fillStyle = "#d6b09d";
+          roundRect(options.x + 42, options.y + 14, 70, 110, 22, true, false);
+          context.fillStyle = "#242424";
+          roundRect(options.x + 64, options.y + 12, 54, 110, 8, true, false);
+          context.fillStyle = "#fff";
+          roundRect(options.x + 69, options.y + 19, 44, 94, 4, true, false);
+        }
+
+        if (options.logo || options.smallLogo) {
+          context.fillStyle = "#fff";
+          context.shadowColor = "rgba(0,0,0,.12)";
+          context.shadowBlur = 14;
+          roundRect(options.x + 36, options.y + 28, 82, 82, 8, true, false);
+          context.shadowBlur = 0;
+        }
+
+        if (options.photo) {
+          const gradient = context.createLinearGradient(options.x, options.y, options.x + options.w, options.y + options.h);
+          gradient.addColorStop(0, "#d0a16a");
+          gradient.addColorStop(1, "#1f2933");
+          context.fillStyle = gradient;
+          roundRect(options.x, options.y, options.w, options.h - 34, 8, true, false);
+        }
+
+        if (options.paper) {
+          context.fillStyle = "#fff";
+          context.fillRect(options.x + 38, options.y, 94, options.h - 34);
+          context.fillStyle = "#000";
+          context.fillRect(options.x + 38, options.y, 94, 18);
+          context.fillRect(options.x + 38, options.y + options.h - 52, 94, 18);
+        }
+
+        if (options.wall) {
+          for (let row = 0; row < 4; row += 1) {
+            for (let col = 0; col < 8; col += 1) {
+              drawQr(options.x + 8 + col * 27, options.y + 8 + row * 25, 1);
+            }
+          }
+        }
+
+        if (options.education) {
+          context.fillStyle = "#04b9a8";
+          roundRect(options.x, options.y, options.w, options.h - 34, 6, true, false);
+          for (let row = 0; row < 2; row += 1) {
+            for (let col = 0; col < 4; col += 1) {
+              drawQr(options.x + 18 + col * 46, options.y + 16 + row * 54, 1);
+            }
+          }
+        }
+
+        if (options.multi) {
+          context.fillStyle = "#111";
+          roundRect(options.x, options.y, options.w, options.h - 34, 6, true, false);
+          drawQr(options.x + 20, options.y + 22, 2, true);
+          drawQr(options.x + 78, options.y + 22, 2, true);
+          drawQr(options.x + 20, options.y + 78, 2, true);
+          drawQr(options.x + 78, options.y + 78, 2, true);
+        }
+
+        if (options.green) {
+          context.strokeStyle = "#9ad233";
+          context.lineWidth = 3;
+          context.strokeRect(options.x + 18, options.y + 14, 90, 100);
+        }
+
+        if (options.qr) {
+          drawQr(options.qr.x, options.qr.y, options.qr.moduleSize, true);
+        }
+
+        if (options.barcode) {
+          drawBarcode(options.barcode.x, options.barcode.y);
+        }
+
+        context.shadowBlur = 0;
+        context.fillStyle = "#5f6368";
+        context.font = "12px Arial";
+        context.fillText(options.title, options.x + 6, options.y + options.h - 10);
+      }
+
+      function drawQr(x, y, moduleSize, track = false) {
+        if (!track) {
+          drawQrLikePattern(x, y, moduleSize);
+          return;
+        }
+
+        QrFixtures.drawQrCode(context, qrIndex % 2 === 0 ? QrFixtures.matrices.google : QrFixtures.matrices.example, {
+          left: x,
+          top: y,
+          moduleSize
+        });
+
+        const size = (21 + 8) * moduleSize;
+        expectedQrBounds.push({
+          id: `qr-${expectedQrBounds.length + 1}`,
+          left: x,
+          top: y,
+          width: size,
+          height: size
+        });
+
+        qrIndex += 1;
+      }
+
+      function drawQrLikePattern(x, y, moduleSize) {
+        const modules = 29;
+        context.fillStyle = "#fff";
+        context.fillRect(x, y, modules * moduleSize, modules * moduleSize);
+        context.fillStyle = "#000";
+
+        for (let row = 4; row < modules - 4; row += 1) {
+          for (let column = 4; column < modules - 4; column += 1) {
+            const shouldDraw = (row * 5 + column * 3 + row * column) % 7 < 3;
+            if (shouldDraw) {
+              context.fillRect(x + column * moduleSize, y + row * moduleSize, moduleSize, moduleSize);
+            }
+          }
+        }
+      }
+
+      function drawBarcode(x, y) {
+        context.fillStyle = "#000";
+        const bars = [2, 1, 4, 1, 3, 2, 1, 5, 1, 3, 2, 4, 1, 2, 5, 1, 3, 2, 1, 4];
+        let cursor = x;
+        for (const width of bars) {
+          context.fillRect(cursor, y, width, 66);
+          cursor += width + 4;
+        }
+        context.fillStyle = "#333";
+        context.font = "14px Arial";
+        context.fillText("0 1 2 3 4 5 6 7 8 9", x - 8, y + 82);
+      }
+
+      function roundRect(x, y, w, h, r, fill, stroke) {
+        context.beginPath();
+        context.roundRect(x, y, w, h, r);
+        if (fill) {
+          context.fill();
+        }
+        if (stroke) {
+          context.stroke();
+        }
+      }
+
+      function circle(x, y, r, fill, stroke) {
+        context.beginPath();
+        context.arc(x, y, r, 0, Math.PI * 2);
+        if (fill) {
+          context.fill();
+        }
+        if (stroke) {
+          context.stroke();
+        }
+      }
+
+      function line(x1, y1, x2, y2) {
+        context.beginPath();
+        context.moveTo(x1, y1);
+        context.lineTo(x2, y2);
+        context.stroke();
+      }
+    </script>
+  </body>
+</html>
